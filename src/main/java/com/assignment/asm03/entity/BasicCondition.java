@@ -37,4 +37,12 @@ public class BasicCondition {
         this.treatment = treatment;
         this.severity = severity;
     }
+
+    public BasicCondition(int id, String conditionName, String description, String treatment, String severity) {
+        this.id = id;
+        this.conditionName = conditionName;
+        this.description = description;
+        this.treatment = treatment;
+        this.severity = severity;
+    }
 }

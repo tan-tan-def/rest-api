@@ -52,7 +52,7 @@ public class AuthController {
     @PostMapping("/auth/sign-up")
     @Operation(summary = "5.1.2. Add user",description = "Add new user")
     public ResponseEntity<?> signUp(@Valid @RequestBody UserDTO userDTO, BindingResult result){
-        Map<String, Object> response = new HashMap<>();
+//        Map<String, Object> response = new HashMap<>();
 
         //show error message
         if(result.hasErrors()){
@@ -65,19 +65,21 @@ public class AuthController {
         userService.save(user);
 
         //save patient
-        MedicalHistory medicalHistory = medicalHistoryService.findById(RandomNumber.randomNumber(medicalHistoryService.findAll().size()));
+//        MedicalHistory medicalHistory = medicalHistoryService.findById(RandomNumber.randomNumber(medicalHistoryService.findAll().size()));
+        MedicalHistory medicalHistory = medicalHistoryService.findById(5);
         Patient patient = createPatient(user);
         patient.setMedicalHistory(medicalHistory);
         patientService.save(patient);
 
         //save BasicCondition
-        BasicCondition basicCondition = basicConditionService.findById(RandomNumber.randomNumber(basicConditionService.findAll().size()));
+//        BasicCondition basicCondition = basicConditionService.findById(RandomNumber.randomNumber(basicConditionService.findAll().size()));
+        BasicCondition basicCondition = basicConditionService.findById(5);
         basicCondition.setPatient(patient);
         basicConditionService.save(basicCondition);
-        response.put("message: ", "Đăng kí thành công");
+//        response.put("message: ", "Đăng kí thành công");
 
 
-        return new ResponseEntity<>(response , HttpStatus.CREATED);
+        return new ResponseEntity<>("Đăng kí thành công" , HttpStatus.CREATED);
     }
     //Create new User
     private User createUser(UserDTO userDTO){

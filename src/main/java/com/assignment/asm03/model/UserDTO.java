@@ -4,9 +4,16 @@ import com.assignment.asm03.annotation.checkEmailDuplicate.EmailNotDuplicate;
 import com.assignment.asm03.annotation.passwordMatches.PasswordMatches;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Getter
+@Setter
 @PasswordMatches(message = "Vui lòng nhập lại mật khẩu trùng khớp với mật khẩu ban đầu")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     @NotNull(message = "Vui lòng điền họ và tên")
     private String name;
@@ -21,7 +28,7 @@ public class UserDTO {
     private String email;
 
     @NotNull(message = "Vui lòng điền số điện thoại")
-    @Pattern(regexp = "^(\\+84|0)\\d{9,10}$", message = "Số điện thoại không hợp lệ")
+//    @Pattern(regexp = "^(\\+84|0)\\d{9,10}$", message = "Số điện thoại không hợp lệ")
     private String phone;
 
     @NotNull(message = "Vui lòng điền địa chỉ")

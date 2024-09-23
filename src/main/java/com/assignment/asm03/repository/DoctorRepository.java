@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
     @Query("SELECT d FROM Doctor d WHERE d.user.id = :id")
     Doctor findByUserId(@Param("id") int id);
-
 }

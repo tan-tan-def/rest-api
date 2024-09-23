@@ -1,7 +1,6 @@
 package com.assignment.asm03.controller;
 
 import com.assignment.asm03.common.CurrencyFormatter;
-import com.assignment.asm03.common.RandomNumber;
 import com.assignment.asm03.entity.*;
 import com.assignment.asm03.security.CustomUserDetail;
 import com.assignment.asm03.service.*;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -24,13 +22,9 @@ public class UserController {
 
     private final HospitalService hospitalService;
     private final SpecializationsService specializationsService;
-    private final UserService userService;
-    private final BCryptPasswordEncoder encoder;
-    private final RoleService roleService;
     private final DoctorService doctorService;
     private final AppointmentService appointmentService;
     private final PatientService patientService;
-    private final MedicalHistoryService medicalHistoryService;
     private final int rangeFee=100000;
 
     //5.1.4. Show the list of outstanding specialization
@@ -102,7 +96,7 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         if(specializations.isEmpty()){
             response.put("message","Không có tìm kiếm phù hợp với từ khóa: "+ valueToSearch);
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }else {
             response.put("message", "Danh sách các chuyên ngành cho từ khóa: " + valueToSearch);
             response.put("data", specializations);
@@ -113,7 +107,6 @@ public class UserController {
     @PostMapping("/booking-appointment")
     @Operation(summary = "5.1.9 Booking an Appointment", description = "Booking a new Appointment")
     public ResponseEntity<?> bookingAppointment(@RequestParam String time, @RequestParam String reason, @RequestParam int doctor_id, @AuthenticationPrincipal CustomUserDetail principal){
-//        Doctor doctor = doctorService.findById(doctor_id);
         Doctor doctor = doctorService.findByUserId(doctor_id);
 
         //Booking an appointment

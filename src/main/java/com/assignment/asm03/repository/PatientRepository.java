@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
     @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.appointments WHERE p.id = :id")
     Patient findByPatientWithAppointments(@Param("id") int id);
-
     @Query("SELECT p FROM Patient p WHERE p.user.id = :id")
     Patient findByUserId(@Param("id") int id);
 }

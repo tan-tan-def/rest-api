@@ -32,7 +32,7 @@ public class ForgotPasswordController {
     //5.1.3 ForgotPassword - Send email;
     @PostMapping("/email-confirmation")
     @Operation(summary = "5.1.3 Forgot Password - Send email", description = "Send email")
-    public ResponseEntity<String> sendEmailForConfirmation(@RequestParam String email, @AuthenticationPrincipal CustomUserDetail principal) {
+    public ResponseEntity<String> sendEmailForConfirmation(@RequestParam String email) {
         User user = userService.findByEmail(email);
         if(user==null){
             return new ResponseEntity<>("Không tìm thấy email: "+email, HttpStatus.NOT_FOUND);

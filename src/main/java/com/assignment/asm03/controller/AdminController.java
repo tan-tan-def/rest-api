@@ -16,10 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -44,7 +41,7 @@ public class AdminController {
     @PutMapping("/unlock-user/{id}")
     @Operation(summary = "5.3.2 Unlock Patient", description = "Unlock User")
     public ResponseEntity<?> unlockUser(@PathVariable int id){
-        return unlock(id,"DOCTOR", Field.ROLE_USER);
+        return unlock(id,"USER", Field.ROLE_USER);
     }
     //5.3.5 Lock doctor's account
     @PutMapping("/lock-doctor/{id}")
@@ -74,7 +71,7 @@ public class AdminController {
     private ResponseEntity<?> unlock(int id, String role, int idRole){
         User user = userService.findById(id);
         if(user.getRole().getId()!=idRole){
-            return new ResponseEntity<>("Vui lòng chọn tài khoản của "+ role, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Vui lòng chọn tài khoản "+ role, HttpStatus.BAD_REQUEST);
         }
         user.setActive(true);
         user.setDescription("Đã mở khóa");
@@ -111,7 +108,7 @@ public class AdminController {
         Patient patient = patientService.findByUserId(userId);
         List<Appointment> appointments = appointmentService.findByPatient(patient);
         if(appointments.isEmpty()){
-            return new ResponseEntity<>("Người dùng "+ patient.getUser().getName()+ " không có lịch khám",HttpStatus.OK);
+            return new ResponseEntity<>("Người dùng "+ patient.getUser().getName()+ " không có lịch khám",HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(appointments,HttpStatus.OK);
     }
@@ -122,7 +119,7 @@ public class AdminController {
         Doctor doctor = doctorService.findByUserId(doctorId);
         List<Appointment> appointments = appointmentService.findByDoctor(doctor);
         if(appointments.isEmpty()){
-            return new ResponseEntity<>("Bác sĩ "+doctor.getUser().getName()+" không có lịch khám",HttpStatus.OK);
+            return new ResponseEntity<>("Bác sĩ "+doctor.getUser().getName()+" không có lịch khám",HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(appointments,HttpStatus.OK);
     }

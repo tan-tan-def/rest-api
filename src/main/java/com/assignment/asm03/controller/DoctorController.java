@@ -16,10 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/doctor")
@@ -36,7 +33,7 @@ public class DoctorController {
     @Operation(summary = "5.2.2 View the list of patient", description = "View the list of patient")
     public ResponseEntity<?> viewPatients(@AuthenticationPrincipal CustomUserDetail principal){
         List<Appointment> appointments = appointmentService.findByDoctor(principal.getUser().getDoctor());
-        Set<Patient> patients = new HashSet<>();
+        List<Patient> patients = new ArrayList<>();
         for(Appointment appointment:appointments){
             patients.add(appointment.getPatient());
         }
@@ -46,7 +43,7 @@ public class DoctorController {
     //5.2.3 List appointment of doctor
     @GetMapping("/list-appointment")
     @Operation(summary = "5.2.3 List appointment of doctor", description = "List appointment of doctor")
-    public ResponseEntity<?> acceptAppointment(@AuthenticationPrincipal CustomUserDetail principal){
+    public ResponseEntity<?> viewAppointmentw(@AuthenticationPrincipal CustomUserDetail principal){
         List<Appointment> appointments = appointmentService.findByDoctor(principal.getUser().getDoctor());
         return new ResponseEntity<>(appointments,HttpStatus.OK);
     }
@@ -70,7 +67,7 @@ public class DoctorController {
     public ResponseEntity<?> cancelAppointment(@PathVariable int appointmentId, @RequestParam String reason, @AuthenticationPrincipal CustomUserDetail principal){
         Appointment appointment = appointmentService.findById(appointmentId);
         if(appointment.getDoctor().getId()!=principal.getUser().getDoctor().getId()){
-            return new ResponseEntity<>("Vui lòng ID Appointment tương ứng với doctor",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Vui lòng nhập ID Appointment tương ứng với doctor",HttpStatus.BAD_REQUEST);
         }
         appointment.setConfirmByDoctor(false);
         appointment.setReason(reason);
@@ -84,13 +81,12 @@ public class DoctorController {
     public ResponseEntity<?> sendPdf(@RequestParam String email, @RequestParam String pathFile){
         User user = userService.findByEmail(email);
         if(user==null){
-            return new ResponseEntity<>("Không tìm thấy email: "+ email, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Không tìm thấy email: "+ email, HttpStatus.NO_CONTENT);
         }
         try {
             emailService.sendEmailWithAttachment(user, pathFile);
             return new ResponseEntity<>("Gửi email thành công!", HttpStatus.OK);
         } catch (MessagingException | IOException e) {
-            e.printStackTrace();
             return new ResponseEntity<>("Gửi mail không thành công \n Vui lòng nhập đúng email và đường dẫn file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
