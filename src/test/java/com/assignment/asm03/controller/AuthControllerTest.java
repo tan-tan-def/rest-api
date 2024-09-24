@@ -1,6 +1,7 @@
 package com.assignment.asm03.controller;
 
 import com.assignment.asm03.entity.*;
+import com.assignment.asm03.model.LoginResponse;
 import com.assignment.asm03.model.UserDTO;
 import com.assignment.asm03.security.JwtDecoder;
 import com.assignment.asm03.security.JwtToPrincipalConverter;
@@ -23,8 +24,7 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(controllers = AuthController.class)
@@ -69,7 +69,28 @@ public class AuthControllerTest {
 
     }
     @Test
-    public void login_UserNotActive_ReturnForbidden() throws Exception {
+    public void AuthController_LoginSuccess_ReturnOk() throws Exception {
+        String email = "test@example.com";
+        String password = "password";
+        User user = new User();
+        user.setEmail(email);
+        user.setName("Nguyen Van A");
+        user.setActive(true);
+        String token = "mocked-token";
+
+        when(userService.findByEmail(email)).thenReturn(user);
+        when(authService.attemptLogin(email, password)).thenReturn(new LoginResponse(token));
+
+        mockMvc.perform(post("/auth/login")
+                        .param("email", email)
+                        .param("password", password)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value(token))
+                .andExpect(jsonPath("$.message").value("Đăng nhập thành công"));
+    }
+    @Test
+    public void Login_UserNotActive_ReturnForbidden() throws Exception {
         // Thiết lập dữ liệu giả
         User user = new User();
         user.setActive(false);

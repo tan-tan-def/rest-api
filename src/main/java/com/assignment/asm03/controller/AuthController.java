@@ -44,8 +44,8 @@ public class AuthController {
             response.put("Lí do: ", user.getDescription());
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
-        response.put("token: ", authService.attemptLogin(email, password).getAccessToken());
-        response.put("message: ", "Đăng nhập thành công");
+        response.put("token", authService.attemptLogin(email, password).getAccessToken());
+        response.put("message", "Đăng nhập thành công");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
     //5.1.2 Register a new user

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 //Lịch sử khám chữa bệnh của một bệnh nhân
 @Entity
 @Getter
+@Setter
 @Table(name="medical_history")
 @NoArgsConstructor
 public class MedicalHistory {

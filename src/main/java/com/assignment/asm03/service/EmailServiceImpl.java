@@ -15,9 +15,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-    private final JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender;
+
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void sendEmail(User user) throws MessagingException, UnsupportedEncodingException {
@@ -36,7 +40,6 @@ public class EmailServiceImpl implements EmailService {
         helper.setTo(user.getEmail());
         helper.setSubject(subject);
         helper.setText(mailContent, true);
-
         javaMailSender.send(message);
     }
 
